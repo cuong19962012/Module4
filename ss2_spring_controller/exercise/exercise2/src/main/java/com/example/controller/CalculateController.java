@@ -28,7 +28,7 @@ public class CalculateController {
                 break;
             case "div":
                 if (input2 == 0)
-                    return modelAndView.addObject("result", "Error");
+                    return modelAndView.addObject("result", "Can't divide with zero");
                 else
                     result = input1 / input2;
                 break;
