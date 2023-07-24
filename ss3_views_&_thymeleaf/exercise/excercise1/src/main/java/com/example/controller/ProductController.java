@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.model.Product;
 import com.example.service.IProductService;
-import com.example.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +16,19 @@ public class ProductController {
     @GetMapping("/")
     public ModelAndView showAll() {
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("products", productService.findAll());
-        modelAndView.addObject("product", new Product());
-        return modelAndView;
+        if (productService.findAll() != null) {
+            modelAndView.addObject("product", new Product());
+            modelAndView.addObject("products", productService.findAll());
+            return modelAndView;
+        } else {
+            modelAndView.addObject("product", new Product());
+            modelAndView.addObject("msg1", "List is empty");
+            return modelAndView;
+        }
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-        product.setId(productService.findAvailableId());
         productService.save(product);
         redirectAttributes.addFlashAttribute("msg", "Create successfully !!!");
         return "redirect:/";
@@ -49,6 +53,8 @@ public class ProductController {
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("products", productService.search(nameProduct));
         modelAndView.addObject("msg1", "Searched " + productService.search(nameProduct).size() + " items");
+        modelAndView.addObject("keySearch", nameProduct);
+        modelAndView.addObject("product", new Product());
         return modelAndView;
     }
 }
