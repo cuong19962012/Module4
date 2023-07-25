@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3 class="display-5">Blogs</h3>
+<p class="float-start">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add new product
+    </button>
+</p>
+<form action="/search" class="float-end w-25" method="get" id="formSearch">
+    <div class="input-group mb-3 ">
+        <input type="text" class="form-control float-start" name="nameProduct" placeholder="Name product"
+               aria-label="Recipient's username"
+               aria-describedby="button-addon2" th:value="${keySearch}">
+        <button class="btn btn-outline-secondary float-end" type="submit" id="button-addon2">Search
+        </button>
+    </div>
+</form>
+<table class="table table-hover" id="customers">
+    <thead>
+    <tr>
+        <th>Topic</th>
+        <th>Content</th>
+        <th>Author</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row,rowStat : ${blogs}">
+        <td th:text="${row.topic}"></td>
+        <td th:text="${row.content}"></td>
+        <td th:text="${row.author}"></td>
+        <td>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal"
+                    th:data-id="${row.id}" th:data-topic="${row.topic}" th:data-content="${row.content}"
+                    th:data-author="${row.author}">Edit
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeModal"
+                    th:data-id="${row.id}" onclick="getIdRemove(this.getAttribute('data-id'));">Remove
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewModal"
+                    th:data-topic="${row.topic}" th:data-content="${row.content}"
+                    th:data-author="${row.author}">View
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<label class="text-black" th:if="${msg1}" th:text="${msg1}"></label>
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Blog</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/create" method="post" id="formCreate" th:object="${product}">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name </label>
+            <input type="text" th:field="*{name}" class="form-control" id="name">
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" th:field="*{price}" class="form-control" id="price">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description </label>
+            <input type="text" th:field="*{description}" class="form-control" id="description">
+          </div>
+          <div class="mb-3">
+            <label for="maker" class="form-label">Maker </label>
+            <input type="text" th:field="*{maker}" class="form-control" id="maker">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="createProduct()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div class="modal fade" id="removeModal" tabindex="-1" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">Remove product </h5>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p>Confirm remove</p>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--        <a id="remove">-->
+<!--          <button type="button" class="btn btn-primary">Remove</button>-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">Edit product</h5>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form action="/edit" method="post" id="formEdit" th:object="${product}">-->
+<!--          <input type="hidden" th:field="*{id}" id="idEdit">-->
+<!--          <div class="mb-3">-->
+<!--            <label for="nameEdit" class="form-label">Name </label>-->
+<!--            <input type="text" th:field="*{name}" class="form-control" id="nameEdit">-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="priceEdit" class="form-label">Price</label>-->
+<!--            <input type="text" th:field="*{price}" class="form-control" id="priceEdit">-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="descriptionEdit" class="form-label">Description </label>-->
+<!--            <input type="text" th:field="*{description}" class="form-control" id="descriptionEdit">-->
+<!--          </div>-->
+<!--          <div class="mb-3">-->
+<!--            <label for="makerEdit" class="form-label">Maker </label>-->
+<!--            <input type="text" th:field="*{maker}" class="form-control" id="makerEdit">-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--        <button type="button" class="btn btn-primary" onclick="editProduct()">Save</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">View product</h5>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Name: </label>-->
+<!--          <label class="form-label" id="nameView"> </label>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Price: </label>-->
+<!--          <label class="form-label" id="priceView">Price</label>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Description: </label>-->
+<!--          <label class="form-label" id="descriptionView">Description </label>-->
+
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--          <label class="form-label">Maker: </label>-->
+<!--          <label class="form-label" id="makerView">Maker </label>-->
+
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div th:if="${msg}" class="modal" tabindex="-1" id="action">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title">Action</h5>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p th:text="${msg}"></p>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"-->
+<!--        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"-->
+<!--        crossorigin="anonymous">-->
+<!--</script>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+<!--<script>-->
+<!--  $(document).ready(function () {-->
+<!--    $("#action").modal('show');-->
+<!--  });-->
+
+<!--  function createProduct() {-->
+<!--    document.getElementById("formCreate").submit();-->
+<!--  }-->
+
+<!--  function editProduct() {-->
+<!--    document.getElementById("formEdit").submit();-->
+<!--  }-->
+
+<!--  function getIdRemove(id) {-->
+<!--    document.getElementById("remove").href = "/remove/" + id;-->
+<!--  }-->
+
+<!--  $('#editModal').on('show.bs.modal', function (e) {-->
+<!--    var id = $(e.relatedTarget).data('id');-->
+<!--    document.getElementById("idEdit").value = id;-->
+<!--  });-->
+<!--  $('#editModal').on('show.bs.modal', function (e) {-->
+<!--    var name = $(e.relatedTarget).data('name');-->
+<!--    document.getElementById("nameEdit").value = name;-->
+<!--  });-->
+<!--  $('#editModal').on('show.bs.modal', function (e) {-->
+<!--    var price = $(e.relatedTarget).data('price');-->
+<!--    document.getElementById("priceEdit").value = price;-->
+<!--  });-->
+<!--  $('#editModal').on('show.bs.modal', function (e) {-->
+<!--    var description = $(e.relatedTarget).data('description');-->
+<!--    document.getElementById("descriptionEdit").value = description;-->
+<!--  });-->
+<!--  $('#editModal').on('show.bs.modal', function (e) {-->
+<!--    var maker = $(e.relatedTarget).data('maker');-->
+<!--    document.getElementById("makerEdit").value = maker;-->
+<!--  });-->
+
+
+<!--  $('#viewModal').on('show.bs.modal', function (e) {-->
+<!--    var name = $(e.relatedTarget).data('name');-->
+<!--    document.getElementById("nameView").innerHTML = name;-->
+<!--  });-->
+<!--  $('#viewModal').on('show.bs.modal', function (e) {-->
+<!--    var price = $(e.relatedTarget).data('price');-->
+<!--    document.getElementById("price").innerHTML = price;-->
+<!--  });-->
+<!--  $('#viewModal').on('show.bs.modal', function (e) {-->
+<!--    var description = $(e.relatedTarget).data('description');-->
+<!--    document.getElementById("descriptionView").innerHTML = description;-->
+<!--  });-->
+<!--  $('#viewModal').on('show.bs.modal', function (e) {-->
+<!--    var maker = $(e.relatedTarget).data('maker');-->
+<!--    document.getElementById("makerView").innerHTML = maker;-->
+<!--  });-->
+
+<!--</script>-->
+</body>
+</html>

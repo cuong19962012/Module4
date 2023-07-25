@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ProductController {
     @Autowired
-    IProductService productService;
+    private IProductService productService;
 
     @GetMapping("/")
     public ModelAndView showAll() {
