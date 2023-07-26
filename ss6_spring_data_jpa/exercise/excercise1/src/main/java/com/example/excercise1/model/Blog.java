@@ -1,4 +1,5 @@
 package com.example.excercise1.model;
+
 import javax.persistence.*;
 
 @Entity
@@ -63,4 +64,5 @@ public class Blog {
     public void setAuthor(String author) {
         this.author = author;
     }
+
 }

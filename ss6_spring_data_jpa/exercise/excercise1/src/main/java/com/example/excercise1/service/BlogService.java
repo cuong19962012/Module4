@@ -18,7 +18,18 @@ public class BlogService implements IBlogService {
     }
 
     @Override
-    public void create(Blog blog) {
+    public void save(Blog blog) {
         blogRepository.save(blog);
     }
+
+    @Override
+    public void delete(int id) {
+        blogRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Blog> search(String topic) {
+        return blogRepository.findAllByTopic(topic);
+    }
+
 }

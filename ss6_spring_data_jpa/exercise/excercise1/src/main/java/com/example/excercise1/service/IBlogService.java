@@ -7,5 +7,9 @@ import java.util.List;
 public interface IBlogService {
     List<Blog> findAll();
 
-    void create(Blog blog);
+    void save(Blog blog);
+
+    void delete(int id);
+
+    List<Blog> search(String topic);
 }

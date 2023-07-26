@@ -1,4 +1,10 @@
 package com.example.excercise1.repository;
 
-public interface IBlogTypeRepository {
+import com.example.excercise1.model.BlogType;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+
+public interface IBlogTypeRepository extends JpaRepository<BlogType, Integer> {
+
 }
