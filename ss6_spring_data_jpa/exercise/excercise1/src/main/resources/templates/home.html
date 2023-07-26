@@ -11,9 +11,9 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Add new blog
     </button>
 </p>
-<form action="/search" class="float-end w-25" method="get" id="formSearch">
+<form action="/" class="float-end w-25" method="get" id="formSearch">
     <div class="input-group mb-3 ">
-        <input type="text" class="form-control float-start" name="nameProduct" placeholder="Name product"
+        <input type="text" class="form-control float-start" name="keySearch" placeholder="Key search"
                aria-label="Recipient's username"
                aria-describedby="button-addon2" th:value="${keySearch}">
         <button class="btn btn-outline-secondary float-end" type="submit" id="button-addon2">Search
@@ -58,6 +58,13 @@
     </tr>
     </tbody>
 </table>
+<a th:if="${blogs.hasPrevious()}" th:href="@{/(page=${blogs.number - 1},keySearch=${keySearch})}">
+    <button class="btn btn-info">Prev</button>
+</a>
+<span th:text="${blogs.number + 1}"></span> -- <span th:text="${blogs.totalPages}"></span>
+<a th:if="${blogs.hasNext()}" th:href="@{/(page=${blogs.number + 1},keySearch=${keySearch})}">
+    <button class="btn btn-info">Next</button>
+</a>
 <label class="text-black" th:if="${msg1}" th:text="${msg1}"></label>
 <!--Modal-->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -69,7 +76,6 @@
             </div>
             <div class="modal-body">
                 <form action="/create" method="post" id="formCreate" th:object="${blog}">
-                    <input type="hidden" th:field="*{id}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name </label>
                         <input type="text" th:field="*{topic}" class="form-control" id="name">

@@ -11,5 +11,4 @@ public interface IBlogTypeService {
 
     void delete(BlogType blogType);
 
-
 }

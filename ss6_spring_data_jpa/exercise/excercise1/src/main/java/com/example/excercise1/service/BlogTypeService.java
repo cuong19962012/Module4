@@ -19,6 +19,7 @@ public class BlogTypeService implements IBlogTypeService {
 
     @Override
     public void create(BlogType blogType) {
+
         blogTypeRepository.save(blogType);
     }
 
@@ -26,4 +27,5 @@ public class BlogTypeService implements IBlogTypeService {
     public void delete(BlogType blogType) {
         blogTypeRepository.delete(blogType);
     }
+
 }
