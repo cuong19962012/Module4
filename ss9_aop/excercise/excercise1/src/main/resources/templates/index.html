@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="text-align: center"><h1>Thư Viện</h1></div>
+<div>
+    <form action="/giveBack" method="get">
+        <input type="text" name="giveBackCode" placeholder="Nhập mã trả">
+        <button type="submit">Trả</button>
+    </form>
+</div>
+<div style="width: 100%;display: flex; justify-content: center">
+
+    <table style="width: 50%">
+        <thead>
+        <th>Tên sách</th>
+        <th>Tên Tác giả</th>
+        <th>Số lượng còn lại</th>
+        <th>Mượn</th>
+        </thead>
+        <tbody>
+        <tr th:each="b:${list}" style="text-align: center">
+            <td th:text="${b.name}">
+            </td>
+            <td th:text="${b.author}">
+            </td>
+            <td th:text="${b.quantity}">
+            </td>
+            <td>
+                <a th:href="@{/borrow/{id}(id=${b.id})}"><Button>Mượn</Button></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:if="${code}" style="text-align: center;color: blue"><h1 th:text="${code}"></h1></div>
+</body>
+</html>
