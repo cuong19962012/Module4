@@ -18,12 +18,19 @@ public class Logger {
     IBookService bookService;
     @Autowired
     IBorrowCodeService borrowCodeService;
+    private static int countAccessPerson = 0;
 
     @After("execution(* com.example.excercise1.controller.BookController.borrowBook(..))")
     public void loggingInfoBorrowBook(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         Book book = bookService.findById((int) args[0]);
         System.out.println("Khách đã mượn 1 cuốn tên" + book.getName());
+    }
+
+    @After("execution(* com.example.excercise1.controller.BookController.home(..))")
+    public void countAccessPerson() {
+        countAccessPerson++;
+        System.out.println("Số người đã truy cập là " + countAccessPerson);
     }
 
     @Before("execution(* com.example.excercise1.controller.BookController.giveBack(..))")
