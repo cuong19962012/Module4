@@ -11,4 +11,6 @@ public interface IBlogTypeService {
 
     void delete(BlogType blogType);
 
+    BlogType findById(int id);
+
 }

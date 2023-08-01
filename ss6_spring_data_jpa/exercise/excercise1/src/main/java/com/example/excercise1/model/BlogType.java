@@ -1,5 +1,7 @@
 package com.example.excercise1.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ public class BlogType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String blogTypeName;
+    @JsonBackReference
     @OneToMany(mappedBy = "blogType")
     private Set<Blog> blogSet;
 

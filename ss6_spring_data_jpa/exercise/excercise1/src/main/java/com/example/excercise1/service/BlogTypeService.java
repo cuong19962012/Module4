@@ -19,13 +19,17 @@ public class BlogTypeService implements IBlogTypeService {
 
     @Override
     public void create(BlogType blogType) {
-
         blogTypeRepository.save(blogType);
     }
 
     @Override
     public void delete(BlogType blogType) {
         blogTypeRepository.delete(blogType);
+    }
+
+    @Override
+    public BlogType findById(int id) {
+        return blogTypeRepository.findById(id).get();
     }
 
 }
