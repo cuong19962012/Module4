@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../static/bootstrap-5.0.2-dist/jquery/jquery.js"></script>
+</head>
+<body>
+<input type="text" id="searchName">
+<button id="btn" onclick="search()">Tìm kiếm</button>
+<!--private int id;-->
+<!--private String topic;-->
+<!--private String content;-->
+<!--private String author;-->
+<!--private BlogType blogType;-->
+<table>
+    <thead>
+    <th>#</th>
+    <th>Topic</th>
+    <th>Content</th>
+    <th>Author</th>
+    <th>Thể loại</th>
+    </thead>
+    <tbody id="content">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<input type="button" onclick="back()">Back</input>
+<input type="button" onclick="next()">Next</input>
+<input type="button" onclick="more()">More</input>
+<script>
+    let page = 0;
+    let size = 1;
+    let maxSize = 0;
+    display();
+
+
+    function more() {
+        page = 0;
+        if (size == maxSize)
+            return false;
+        size++;
+        let content = "";
+        let name = $('#searchName').val();
+        $.ajax({
+            contentType: "application/json",
+            method: "GET",
+            dataType: "json",
+            url: "http://localhost:8080/blogs/?keySearch=" + name + "&page=" + page + "&size=" + size,
+            success: function (data) {
+
+                for (let i = 0; i < data.content.length; i++) {
+                    content += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${data.content[i].topic}</td>
+                            <td>${data.content[i].content}</td>
+                            <td>${data.content[i].author}</td>
+                            <td>${data.content[i].blogType.blogTypeName}</td>
+                        </tr>`
+                }
+                $("#content").html(content);
+            }
+        })
+    }
+
+    function back() {
+        let content = "";
+        let name = $('#searchName').val();
+        if (page == 0)
+            return false;
+        page--;
+        $.ajax({
+            contentType: "application/json",
+            method: "GET",
+            dataType: "json",
+            url: "http://localhost:8080/blogs/?keySearch=" + name + "&page=" + page + "&size=" + size,
+            success: function (data) {
+                for (let i = 0; i < data.content.length; i++) {
+                    content += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${data.content[i].topic}</td>
+                            <td>${data.content[i].content}</td>
+                            <td>${data.content[i].author}</td>
+                            <td>${data.content[i].blogType.blogTypeName}</td>
+                        </tr>`
+                }
+                $("#content").html(content);
+            }
+        })
+    }
+
+    function next() {
+        let content = "";
+        let name = $('#searchName').val();
+        page++;
+        $.ajax({
+            contentType: "application/json",
+            method: "GET",
+            dataType: "json",
+            url: "http://localhost:8080/blogs/?keySearch=" + name + "&page=" + page + "&size=" + size,
+            success: function (data) {
+                if (data == null) {
+                    page--;
+                    return false;
+                }
+                for (let i = 0; i < data.content.length; i++) {
+                    content += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${data.content[i].topic}</td>
+                            <td>${data.content[i].content}</td>
+                            <td>${data.content[i].author}</td>
+                            <td>${data.content[i].blogType.blogTypeName}</td>
+                        </tr>`
+                }
+                $("#content").html(content);
+            }
+        })
+    }
+
+    function search() {
+        let content = "";
+        let name = $('#searchName').val();
+        $.ajax({
+            contentType: "application/json",
+            method: "GET",
+            dataType: "json",
+            url: "http://localhost:8080/blogs/?keySearch=" + name,
+            success: function (data) {
+                for (let i = 0; i < data.content.length; i++) {
+                    content += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${data.content[i].topic}</td>
+                            <td>${data.content[i].content}</td>
+                            <td>${data.content[i].author}</td>
+                            <td>${data.content[i].blogType.blogTypeName}</td>
+                        </tr>`
+                }
+                $("#content").html(content);
+            }
+        })
+    }
+
+    function display() {
+        let content = "";
+        $.ajax({
+            contentType: "application/json",
+            method: "GET",
+            dataType: "json",
+            url: "http://localhost:8080/blogs/",
+            success: function (data) {
+                maxSize = data.totalElements;
+                for (let i = 0; i < data.content.length; i++) {
+                    content += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${data.content[i].topic}</td>
+                            <td>${data.content[i].content}</td>
+                            <td>${data.content[i].author}</td>
+                            <td>${data.content[i].blogType.blogTypeName}</td>
+                        </tr>`
+                }
+                $("#content").html(content);
+            }
+        })
+    }
+</script>
+</body>
+</html>

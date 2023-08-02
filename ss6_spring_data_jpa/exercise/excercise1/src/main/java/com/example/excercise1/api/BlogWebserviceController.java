@@ -18,8 +18,8 @@ public class BlogWebserviceController {
     private IBlogService blogService;
 
     @GetMapping("/")
-    public ResponseEntity<Page<Blog>> getInfo(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String keySearch) {
-        Pageable pageable = PageRequest.of(page, 1);
+    public ResponseEntity<Page<Blog>> getInfo(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size, @RequestParam(defaultValue = "") String keySearch) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<Blog> listBlog = blogService.findAll(pageable, keySearch);
         if (listBlog.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
